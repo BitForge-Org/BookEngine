@@ -1,0 +1,27 @@
+openapi: 3.0.0
+info:
+  title: Appointment Booking API
+  version: 1.0.0
+  description: API-first backend for multipurpose appointment booking platform
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
