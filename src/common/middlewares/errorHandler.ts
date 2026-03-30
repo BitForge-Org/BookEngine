@@ -16,8 +16,12 @@ export const errorHandler = (
     statusCode = err.statusCode;
     message = err.message;
   } else {
-    // Log unexpected errors
-    logger.error(`[Unhandled Error] ${err.message}`, { stack: err.stack });
+    logger.error(
+      `[Unhandled Error] ${req.method} ${req.originalUrl} - ${err.message}`,
+      {
+        stack: err.stack,
+      }
+    );
   }
 
   res.status(statusCode).json({
@@ -29,7 +33,7 @@ export const errorHandler = (
 
 export const notFoundHandler = (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): void => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

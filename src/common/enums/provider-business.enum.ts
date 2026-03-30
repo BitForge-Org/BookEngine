@@ -1,0 +1,15 @@
+export enum ProviderBusiness {
+    DOCTOR = "Doctor",
+    HOSPITAL = "Hospital",
+    CLINIC = "Clinic",
+    LAB = "Lab",
+    PHARMACY = "Pharmacy",
+    GYM = "Gym",
+    BEAUTY_SALON = "Beauty Salon",
+    SPA = "Spa",
+    FITNESS_CENTER = "Fitness Center",
+    SALON = 'salon',
+    ARTIST = 'artist',
+    CONSULTANT = 'consultant',
+    OTHER = "Other",
+}

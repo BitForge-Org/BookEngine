@@ -5,9 +5,9 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
-
 import * as morgan from './config/morgan';
 import { errorHandler, notFoundHandler } from './common/middlewares/errorHandler';
+import routes from './router';
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(helmet());
 
 // Enable CORS
 app.use(cors());
-app.options('*', cors());
+app.options(/.*/, cors());
 
 // Parse JSON request body
 app.use(express.json());
@@ -43,7 +43,10 @@ app.use(limiter);
 // Swagger
 const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/v1', routes);
 
+app.use(notFoundHandler);
+app.use(errorHandler);
 // Health route
 app.get('/health', (_req, res) => {
   res.status(200).json({

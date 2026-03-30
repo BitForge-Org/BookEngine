@@ -1,0 +1,204 @@
+{
+    "info": {
+        "name": "Provider Module API",
+        "_postman_id": "8d8f3c91-5b5d-4b8d-9f8f-provider-module",
+        "description": "Provider module APIs for appointment backend",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000/api/v1"
+        },
+        {
+            "key": "providerId",
+            "value": "67f0a11c3c44c9d3a0f89b11"
+        },
+        {
+            "key": "providerSlug",
+            "value": "dr-raj-mehta"
+        }
+    ],
+    "item": [
+        {
+            "name": "Create Provider",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"displayName\": \"Dr. Raj Mehta\",\n  \"businessName\": \"Mehta Dental Care\",\n  \"providerType\": \"doctor\",\n  \"providerBusiness\": \"clinic\",\n  \"bookingSlug\": \"dr-raj-mehta\",\n  \"logoUrl\": \"https://example.com/logo.png\",\n  \"bannerUrl\": \"https://example.com/banner.png\",\n  \"description\": \"Experienced dental surgeon with 10+ years of practice.\",\n  \"website\": \"https://mehtadentalcare.com\",\n  \"socialLinks\": [\n    {\n      \"platform\": \"instagram\",\n      \"url\": \"https://instagram.com/drrajmehta\"\n    },\n    {\n      \"platform\": \"facebook\",\n      \"url\": \"https://facebook.com/drrajmehta\"\n    }\n  ],\n  \"contactInfo\": {\n    \"email\": \"drraj@example.com\",\n    \"phone\": \"+919876543210\"\n  },\n  \"location\": {\n    \"address\": \"123 MG Road\",\n    \"city\": \"Pune\",\n    \"state\": \"Maharashtra\",\n    \"zip\": \"411014\",\n    \"country\": \"India\"\n  },\n  \"timezone\": \"Asia/Kolkata\"\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/providers",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get All Providers",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/providers?page=1&limit=10",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers"
+                    ],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "1"
+                        },
+                        {
+                            "key": "limit",
+                            "value": "10"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get All Providers With Filters",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/providers?page=1&limit=10&providerType=doctor&status=active&isActive=true",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers"
+                    ],
+                    "query": [
+                        {
+                            "key": "page",
+                            "value": "1"
+                        },
+                        {
+                            "key": "limit",
+                            "value": "10"
+                        },
+                        {
+                            "key": "providerType",
+                            "value": "doctor"
+                        },
+                        {
+                            "key": "status",
+                            "value": "active"
+                        },
+                        {
+                            "key": "isActive",
+                            "value": "true"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Provider By ID",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/providers/{{providerId}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers",
+                        "{{providerId}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Provider By Slug",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/providers/slug/{{providerSlug}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers",
+                        "slug",
+                        "{{providerSlug}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Get Public Provider By Slug",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "{{baseUrl}}/providers/public/{{providerSlug}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers",
+                        "public",
+                        "{{providerSlug}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Update Provider",
+            "request": {
+                "method": "PATCH",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"displayName\": \"Dr. Rajesh Mehta\",\n  \"description\": \"Updated description for provider profile\",\n  \"website\": \"https://updated-mehtadentalcare.com\",\n  \"contactInfo\": {\n    \"email\": \"updated-drraj@example.com\",\n    \"phone\": \"+919999999999\"\n  },\n  \"location\": {\n    \"address\": \"456 FC Road\",\n    \"city\": \"Pune\",\n    \"state\": \"Maharashtra\",\n    \"zip\": \"411001\",\n    \"country\": \"India\"\n  }\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/providers/{{providerId}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers",
+                        "{{providerId}}"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Deactivate Provider",
+            "request": {
+                "method": "PATCH",
+                "url": {
+                    "raw": "{{baseUrl}}/providers/{{providerId}}/deactivate",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "providers",
+                        "{{providerId}}",
+                        "deactivate"
+                    ]
+                }
+            }
+        }
+    ]
+}
