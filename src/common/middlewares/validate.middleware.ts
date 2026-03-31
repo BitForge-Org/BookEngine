@@ -10,13 +10,26 @@ export const validate =
     try {
       const parsedData = schema.parse(req[target]);
 
-      req[target] = parsedData as Request[ValidationTarget];
+      if (target === 'body') {
+        Object.assign(req.body, parsedData);
+      }
+
+      if (target === 'params') {
+        Object.assign(req.params, parsedData);
+      }
+
+      if (target === 'query') {
+        Object.assign(req.query, parsedData);
+      }
 
       next();
     } catch (error) {
       if (error instanceof ZodError) {
         const message = error.issues
-          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+          .map((issue) => {
+            const path = issue.path.length ? issue.path.join('.') : 'field';
+            return `${path}: ${issue.message}`;
+          })
           .join(', ');
 
         next(new BadRequestError(message || 'Validation failed'));

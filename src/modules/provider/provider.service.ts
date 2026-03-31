@@ -12,6 +12,8 @@ import {
   NotFoundError,
 } from '../../common/errors';
 import { ProviderListQueryDto } from './dto/provider-list-query.dto';
+import { notificationService } from '../../notifications';
+import logger from '../../config/logger';
 
 export class ProviderService {
   private readonly providerRepository = new ProviderRepository();
@@ -48,6 +50,22 @@ export class ProviderService {
       status: ProviderStatus.DRAFT,
       isActive: true,
     });
+
+    if (createdProvider.contactInfo?.email) {
+      notificationService
+        .sendProviderWelcomeEmail({
+          to: createdProvider.contactInfo.email,
+          displayName: createdProvider.displayName,
+          bookingSlug: createdProvider.bookingSlug,
+        })
+        .catch((error) => {
+          logger.error('❌ Failed to send provider welcome email', {
+            providerId: createdProvider._id?.toString(),
+            email: createdProvider.contactInfo?.email,
+            error,
+          });
+        });
+    }
 
     return this.toProviderResponseDto(createdProvider);
   }
