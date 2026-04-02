@@ -22,6 +22,7 @@ const locationSchema = z.object({
 });
 
 export const createProviderSchema = z.object({
+  ownerId: z.string().min(1).optional(),
   displayName: z.string().trim().min(2).max(100),
   businessName: z.string().trim().max(150).optional(),
   providerType: z.nativeEnum(ProviderType),

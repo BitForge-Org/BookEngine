@@ -14,9 +14,14 @@ import {
 import { ProviderListQueryDto } from './dto/provider-list-query.dto';
 import { notificationService } from '../../notifications';
 import logger from '../../config/logger';
+import { AuthService } from '../auth/auth.service';
+import { AuthRepository } from '../auth/auth.repository';
+import env from '../../config/env';
 
 export class ProviderService {
   private readonly providerRepository = new ProviderRepository();
+  private readonly authService = new AuthService();
+private readonly authRepository = new AuthRepository();
 
   async createProvider(dto: CreateProviderDto): Promise<ProviderResponseDto> {
     const slugExists = await this.providerRepository.existsBySlug(dto.bookingSlug);
@@ -49,22 +54,34 @@ export class ProviderService {
       ...dto,
       status: ProviderStatus.DRAFT,
       isActive: true,
+      ownerId : undefined
     });
 
     if (createdProvider.contactInfo?.email) {
-      notificationService
-        .sendProviderWelcomeEmail({
-          to: createdProvider.contactInfo.email,
-          displayName: createdProvider.displayName,
-          bookingSlug: createdProvider.bookingSlug,
-        })
-        .catch((error) => {
-          logger.error('❌ Failed to send provider welcome email', {
-            providerId: createdProvider._id?.toString(),
-            email: createdProvider.contactInfo?.email,
-            error,
-          });
+     
+      const setupToken = this.authService.generateSetupToken();
+      
+      await this.authRepository.createSetupToken({
+      token: setupToken,
+      providerId: createdProvider._id.toString(),
+      email: createdProvider.contactInfo.email,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24h
+      })
+      const setupLink = `${env.APP_SETUP_URL}?token=${setupToken}`;
+       notificationService
+      .sendProviderSetupEmail({
+        to: createdProvider.contactInfo.email,
+        displayName: createdProvider.displayName,
+        setupLink,
+      })
+      .catch((error) => {
+        logger.error('❌ Failed to send provider setup email', {
+          providerId: createdProvider._id?.toString(),
+          email: createdProvider.contactInfo?.email,
+          error,
         });
+      });
+
     }
 
     return this.toProviderResponseDto(createdProvider);

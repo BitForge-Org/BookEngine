@@ -12,3 +12,9 @@ export interface SendAppointmentBookedEmailInput {
   appointmentDate: string;
   appointmentTime: string;
 }
+
+export interface SendProviderSetupEmailInput {
+  to: string;
+  displayName: string;
+  setupLink: string;
+}

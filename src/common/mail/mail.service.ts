@@ -46,6 +46,8 @@ class MailService {
         references: options.references,
       });
 
+      logger.info(options.from)
+
       logger.info('📧 Email sent successfully', {
         messageId: info.messageId,
         to: options.to,

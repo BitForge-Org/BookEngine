@@ -82,6 +82,12 @@ const providerSocialLinkSchema = new Schema<ProviderSocialLink>(
 
 const providerSchema = new Schema<ProviderDocument>(
   {
+    ownerId: {
+      type: Schema.Types.ObjectId,
+      ref: 'AuthUser',
+      required: false,
+      index: true,
+    },
     displayName: {
       type: String,
       required: true,
@@ -177,6 +183,7 @@ const providerSchema = new Schema<ProviderDocument>(
       trim: true,
       default: 'Asia/Kolkata',
     },
+    
   },
   {
     timestamps: true,

@@ -114,4 +114,16 @@ export class ProviderRepository {
 
       return { data, total };
   }
+
+    async assignOwnerAndActivate(providerId: string, ownerId: string) {
+    return ProviderModel.findByIdAndUpdate(
+      providerId,
+      {
+        ownerId,
+        status: 'active',
+        isActive: true,
+      },
+      { new: true }
+    );
+  }
 }

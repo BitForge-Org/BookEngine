@@ -17,6 +17,9 @@ const env = cleanEnv(process.env, {
   SMTP_PASS: str({ default: '' }),
   SMTP_FROM: str({ default: '' }),
   SMTP_REPLY_TO: str({ default: '' }),
+  JWT_SECRET: str({ default: '' }),
+  JWT_EXPIRES_IN: str({ default: '1d' }),
+  APP_SETUP_URL: str({ default: '' }),
 });
 
 export default env;

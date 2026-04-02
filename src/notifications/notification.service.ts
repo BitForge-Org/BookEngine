@@ -6,8 +6,10 @@ import {
 } from '../common/mail/templates';
 import {
   SendAppointmentBookedEmailInput,
+  SendProviderSetupEmailInput,
   SendProviderWelcomeEmailInput,
 } from './notification.types';
+import { buildProviderSetupTemplate } from '../common/mail/templates/provider-setup.template';
 
 class NotificationService {
   async sendProviderWelcomeEmail(
@@ -70,6 +72,32 @@ class NotificationService {
       throw error;
     }
   }
+
+  async sendProviderSetupEmail(
+  payload: SendProviderSetupEmailInput
+): Promise<void> {
+  try {
+    const template = buildProviderSetupTemplate({
+      displayName: payload.displayName,
+      setupLink: payload.setupLink,
+    });
+
+    await mailService.sendMail({
+      to: payload.to,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+    });
+
+    logger.info('📨 Provider setup email sent', {
+      to: payload.to,
+    });
+  } catch (error) {
+    logger.error('❌ Failed to send provider setup email', error);
+
+    throw error;
+  }
+}
 }
 
 export const notificationService = new NotificationService();

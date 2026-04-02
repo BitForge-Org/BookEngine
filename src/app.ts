@@ -5,6 +5,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+
 import * as morgan from './config/morgan';
 import { errorHandler, notFoundHandler } from './common/middlewares/errorHandler';
 import routes from './router';
@@ -34,19 +35,18 @@ app.use(compression());
 
 // Request rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Too many requests from this IP, please try again later.',
 });
-app.use(limiter);
+
+// Enable if needed
+// app.use(limiter);
 
 // Swagger
 const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use('/api/v1', routes);
 
-app.use(notFoundHandler);
-app.use(errorHandler);
 // Health route
 app.get('/health', (_req, res) => {
   res.status(200).json({
@@ -54,6 +54,9 @@ app.get('/health', (_req, res) => {
     message: 'Server is healthy',
   });
 });
+
+// API routes
+app.use('/api/v1', routes);
 
 // Handle unknown routes
 app.use(notFoundHandler);
