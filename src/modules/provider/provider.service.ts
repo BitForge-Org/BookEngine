@@ -17,11 +17,12 @@ import logger from '../../config/logger';
 import { AuthService } from '../auth/auth.service';
 import { AuthRepository } from '../auth/auth.repository';
 import env from '../../config/env';
+import { JwtUserPayload } from '../auth/auth.types';
 
 export class ProviderService {
   private readonly providerRepository = new ProviderRepository();
   private readonly authService = new AuthService();
-private readonly authRepository = new AuthRepository();
+  private readonly authRepository = new AuthRepository();
 
   async createProvider(dto: CreateProviderDto): Promise<ProviderResponseDto> {
     const slugExists = await this.providerRepository.existsBySlug(dto.bookingSlug);
@@ -166,7 +167,7 @@ private readonly authRepository = new AuthRepository();
       totalPages: Math.ceil(total / limit),
     },
   };
-}
+  }
 
   async updateProvider(
     id: string,
@@ -292,5 +293,114 @@ private readonly authRepository = new AuthRepository();
 
       timezone: provider.timezone,
     };
+  }
+
+  async getMyProvider(ownerId: string): Promise<ProviderResponseDto> {
+    const provider = await this.providerRepository.findByOwnerId(ownerId);
+
+    if (!provider) {
+      throw new NotFoundError('Provider profile not found');
+    }
+
+    return this.toProviderResponseDto(provider);
+  }
+
+  private async getProviderByIdForAccess(
+    providerId: string,
+    user: JwtUserPayload
+  ): Promise<ProviderDocument> {
+    const provider = await this.providerRepository.findById(providerId);
+
+  if (!provider) {
+    throw new NotFoundError('Provider not found');
+  }
+
+  const ownerId = provider.ownerId?.toString();
+
+  // Admin can access any provider
+  if (user.role === 'admin') {
+    return provider;
+  }
+
+  // Provider can access only their own provider
+  if (!ownerId || ownerId !== user.sub) {
+    throw new ForbiddenError('You are not allowed to access this provider');
+  }
+
+  return provider;
+  }
+
+  async getProviderByIdWithAccess(
+    providerId: string,
+    user: JwtUserPayload
+  ): Promise<ProviderResponseDto> {
+    const provider = await this.getProviderByIdForAccess(providerId, user);
+    return this.toProviderResponseDto(provider);
+  } 
+
+  async updateProviderWithAccess(
+  providerId: string,
+  dto: UpdateProviderDto,
+  user: JwtUserPayload
+): Promise<ProviderResponseDto> {
+  const existingProvider = await this.getProviderByIdForAccess(providerId, user);
+
+  const normalizedSlug = dto.bookingSlug?.trim().toLowerCase();
+  const normalizedEmail = dto.contactInfo?.email?.trim().toLowerCase();
+
+  // 🔹 Slug uniqueness check
+  if (normalizedSlug && normalizedSlug !== existingProvider.bookingSlug) {
+    const slugExists = await this.providerRepository.existsBySlug(normalizedSlug);
+
+    if (slugExists) {
+      throw new ConflictError('Booking slug already exists');
+    }
+  }
+
+  // 🔹 Email uniqueness check
+  if (
+    normalizedEmail &&
+    normalizedEmail !== existingProvider.contactInfo?.email
+  ) {
+    const emailExists = await this.providerRepository.existsByContactEmail(
+      normalizedEmail
+    );
+
+    if (emailExists) {
+      throw new ConflictError('Provider contact email already exists');
+    }
+  }
+
+  const updatedProvider = await this.providerRepository.updateById(providerId, {
+    ...dto,
+    ...(normalizedSlug && { bookingSlug: normalizedSlug }),
+    ...(dto.contactInfo && {
+      contactInfo: {
+        ...dto.contactInfo,
+        email: normalizedEmail,
+      },
+    }),
+  });
+
+  if (!updatedProvider) {
+    throw new NotFoundError('Provider not found during update');
+  }
+
+  return this.toProviderResponseDto(updatedProvider);
+  }
+
+  async deactivateProviderWithAccess(
+  providerId: string,
+  user: JwtUserPayload
+): Promise<ProviderResponseDto> {
+  await this.getProviderByIdForAccess(providerId, user);
+
+  const provider = await this.providerRepository.softDeactivateById(providerId);
+
+  if (!provider) {
+    throw new NotFoundError('Provider not found');
+  }
+
+  return this.toProviderResponseDto(provider);
   }
 }

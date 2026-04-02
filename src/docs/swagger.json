@@ -1,0 +1,829 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"ProviderType": {
+				"enum": [
+					"individual",
+					"business"
+				],
+				"type": "string"
+			},
+			"ProviderBusiness": {
+				"enum": [
+					"Doctor",
+					"Hospital",
+					"Clinic",
+					"Lab",
+					"Pharmacy",
+					"Gym",
+					"Beauty Salon",
+					"Spa",
+					"Fitness Center",
+					"salon",
+					"artist",
+					"consultant",
+					"Other"
+				],
+				"type": "string"
+			},
+			"ProviderStatus": {
+				"enum": [
+					"active",
+					"inactive",
+					"pending",
+					"rejected",
+					"suspended",
+					"deleted",
+					"draft"
+				],
+				"type": "string"
+			},
+			"ProviderResponseSocialLinkDto": {
+				"properties": {
+					"platform": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"platform",
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderResponseContactInfoDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderResponseLocationDto": {
+				"properties": {
+					"address": {
+						"type": "string"
+					},
+					"city": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"zip": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderResponseDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"displayName": {
+						"type": "string"
+					},
+					"businessName": {
+						"type": "string"
+					},
+					"providerType": {
+						"$ref": "#/components/schemas/ProviderType"
+					},
+					"providerBusiness": {
+						"$ref": "#/components/schemas/ProviderBusiness"
+					},
+					"bookingSlug": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ProviderStatus"
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"logoUrl": {
+						"type": "string"
+					},
+					"bannerUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"website": {
+						"type": "string"
+					},
+					"socialLinks": {
+						"items": {
+							"$ref": "#/components/schemas/ProviderResponseSocialLinkDto"
+						},
+						"type": "array"
+					},
+					"contactInfo": {
+						"$ref": "#/components/schemas/ProviderResponseContactInfoDto"
+					},
+					"location": {
+						"$ref": "#/components/schemas/ProviderResponseLocationDto"
+					},
+					"timezone": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"displayName",
+					"providerType",
+					"providerBusiness",
+					"bookingSlug",
+					"status",
+					"isActive",
+					"timezone",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ApiResponseType_ProviderResponseDto_": {
+				"description": "TSOA compatible API Response wrapper",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ProviderResponseDto"
+							}
+						],
+						"nullable": true
+					},
+					"meta": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateProviderSocialLinkDto": {
+				"properties": {
+					"platform": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"platform",
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateProviderContactInfoDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateProviderLocationDto": {
+				"properties": {
+					"address": {
+						"type": "string"
+					},
+					"city": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"zip": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateProviderDto": {
+				"properties": {
+					"displayName": {
+						"type": "string"
+					},
+					"businessName": {
+						"type": "string"
+					},
+					"providerType": {
+						"$ref": "#/components/schemas/ProviderType"
+					},
+					"providerBusiness": {
+						"$ref": "#/components/schemas/ProviderBusiness"
+					},
+					"bookingSlug": {
+						"type": "string"
+					},
+					"logoUrl": {
+						"type": "string"
+					},
+					"bannerUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"website": {
+						"type": "string"
+					},
+					"socialLinks": {
+						"items": {
+							"$ref": "#/components/schemas/CreateProviderSocialLinkDto"
+						},
+						"type": "array"
+					},
+					"contactInfo": {
+						"$ref": "#/components/schemas/CreateProviderContactInfoDto"
+					},
+					"location": {
+						"$ref": "#/components/schemas/CreateProviderLocationDto"
+					},
+					"timezone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"displayName",
+					"providerType",
+					"providerBusiness",
+					"bookingSlug",
+					"timezone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderPublicResponseSocialLinkDto": {
+				"properties": {
+					"platform": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"platform",
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderPublicResponseContactInfoDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderPublicResponseLocationDto": {
+				"properties": {
+					"city": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProviderPublicResponseDto": {
+				"properties": {
+					"displayName": {
+						"type": "string"
+					},
+					"businessName": {
+						"type": "string"
+					},
+					"providerType": {
+						"$ref": "#/components/schemas/ProviderType"
+					},
+					"providerBusiness": {
+						"$ref": "#/components/schemas/ProviderBusiness"
+					},
+					"bookingSlug": {
+						"type": "string"
+					},
+					"logoUrl": {
+						"type": "string"
+					},
+					"bannerUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"website": {
+						"type": "string"
+					},
+					"socialLinks": {
+						"items": {
+							"$ref": "#/components/schemas/ProviderPublicResponseSocialLinkDto"
+						},
+						"type": "array"
+					},
+					"contactInfo": {
+						"$ref": "#/components/schemas/ProviderPublicResponseContactInfoDto"
+					},
+					"location": {
+						"$ref": "#/components/schemas/ProviderPublicResponseLocationDto"
+					},
+					"timezone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"displayName",
+					"providerType",
+					"providerBusiness",
+					"bookingSlug",
+					"timezone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponseType_ProviderPublicResponseDto_": {
+				"description": "TSOA compatible API Response wrapper",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ProviderPublicResponseDto"
+							}
+						],
+						"nullable": true
+					},
+					"meta": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponseType_ProviderResponseDto-Array_": {
+				"description": "TSOA compatible API Response wrapper",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/ProviderResponseDto"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"meta": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateProviderDto": {
+				"properties": {
+					"displayName": {
+						"type": "string"
+					},
+					"businessName": {
+						"type": "string"
+					},
+					"providerType": {
+						"type": "string"
+					},
+					"providerBusiness": {
+						"type": "string"
+					},
+					"timezone": {
+						"type": "string"
+					},
+					"bookingSlug": {
+						"type": "string"
+					},
+					"logoUrl": {
+						"type": "string"
+					},
+					"bannerUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"website": {
+						"type": "string"
+					},
+					"socialLinks": {
+						"items": {
+							"properties": {
+								"url": {
+									"type": "string"
+								},
+								"platform": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"url",
+								"platform"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"contactInfo": {
+						"properties": {
+							"phone": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"location": {
+						"properties": {
+							"country": {
+								"type": "string"
+							},
+							"zip": {
+								"type": "string"
+							},
+							"state": {
+								"type": "string"
+							},
+							"city": {
+								"type": "string"
+							},
+							"address": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "appointment-backend",
+		"version": "1.0.0",
+		"description": "Multipurpose appointment booking backend",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/providers": {
+			"post": {
+				"operationId": "CreateProvider",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateProviderDto"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAllProviders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderResponseDto-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "providerType",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isActive",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/providers/{id}": {
+			"get": {
+				"operationId": "GetProviderById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateProvider",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateProviderDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/providers/slug/{slug}": {
+			"get": {
+				"operationId": "GetProviderBySlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/providers/public/{slug}": {
+			"get": {
+				"operationId": "GetPublicProviderBySlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderPublicResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/providers/{id}/deactivate": {
+			"patch": {
+				"operationId": "DeactivateProvider",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponseType_ProviderResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Providers"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/api/v1"
+		}
+	]
+}

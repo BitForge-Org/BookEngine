@@ -9,6 +9,7 @@ import YAML from 'yamljs';
 import * as morgan from './config/morgan';
 import { errorHandler, notFoundHandler } from './common/middlewares/errorHandler';
 import routes from './router';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -46,7 +47,7 @@ const limiter = rateLimit({
 // Swagger
 const swaggerDocument = YAML.load('./src/docs/swagger.yaml');
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
+app.use(cookieParser()); // IMPORTANT
 // Health route
 app.get('/health', (_req, res) => {
   res.status(200).json({

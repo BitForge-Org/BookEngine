@@ -7,6 +7,7 @@ import {
   getSingleNumber,
   getSingleString,
 } from '../../common/utils/request.utils';
+import { UnauthorizedError } from '../../common/errors';
 
 export class ProviderController {
   private readonly providerService = new ProviderService();
@@ -22,7 +23,7 @@ export class ProviderController {
   getProviderById = asyncHandler(async (req: Request, res: Response) => {
     const id = getSingleString(req.params.id);
 
-    const provider = await this.providerService.getProviderById(id!);
+    const provider = await this.providerService.getProviderByIdWithAccess(id!, req.user!);
 
     res
       .status(200)
@@ -78,7 +79,7 @@ export class ProviderController {
   updateProvider = asyncHandler(async (req: Request, res: Response) => {
     const id = getSingleString(req.params.id);
 
-    const provider = await this.providerService.updateProvider(id!, req.body);
+    const provider = await this.providerService.updateProviderWithAccess(id!, req.body, req.user!);
 
     res
       .status(200)
@@ -88,10 +89,26 @@ export class ProviderController {
   deactivateProvider = asyncHandler(async (req: Request, res: Response) => {
     const id = getSingleString(req.params.id);
 
-    const provider = await this.providerService.deactivateProvider(id!);
+    const provider = await this.providerService.deactivateProviderWithAccess(id!, req.user!);
 
     res
       .status(200)
       .json(ApiResponse.success(provider, 'Provider deactivated successfully'));
   });
+
+  getMyProvider = asyncHandler(async (req: Request, res: Response) => {
+    const authUserId = req.user?.sub;
+
+    if (!authUserId) {
+      throw new UnauthorizedError('Authentication required');
+    }
+
+    const provider = await this.providerService.getMyProvider(authUserId);
+
+    res
+      .status(200)
+      .json(ApiResponse.success(provider, 'Provider profile fetched successfully'));
+  });
+
+  
 }

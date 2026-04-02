@@ -8,6 +8,10 @@ import {
   providerSlugParamSchema,
   updateProviderSchema,
 } from './validations/provider.validation';
+import {
+  authenticate,
+  authorizeRoles,
+} from '../../common/middlewares';
 
 const router = Router();
 const providerController = new ProviderController();
@@ -25,13 +29,15 @@ router.get(
  * Internal / Protected-ready Routes
  */
 router.post(
-  '/',
+  '/',  
   validate(createProviderSchema, 'body'),
   providerController.createProvider
 );
 
 router.get(
   '/',
+  authenticate,
+  authorizeRoles('admin'),
   validate(providerListQuerySchema, 'query'),
   providerController.getAllProviders
 );
@@ -43,6 +49,13 @@ router.get(
 );
 
 router.get(
+  '/me',
+  authenticate,
+  authorizeRoles('provider'),
+  providerController.getMyProvider
+);
+
+router.get(
   '/:id',
   validate(providerIdParamSchema, 'params'),
   providerController.getProviderById
@@ -50,6 +63,8 @@ router.get(
 
 router.patch(
   '/:id',
+  authenticate,
+  authorizeRoles('provider','admin'),
   validate(providerIdParamSchema, 'params'),
   validate(updateProviderSchema, 'body'),
   providerController.updateProvider
@@ -57,8 +72,13 @@ router.patch(
 
 router.patch(
   '/:id/deactivate',
+  authenticate,
+  authorizeRoles('admin','admin'),
   validate(providerIdParamSchema, 'params'),
   providerController.deactivateProvider
 );
+
+
+
 
 export default router;

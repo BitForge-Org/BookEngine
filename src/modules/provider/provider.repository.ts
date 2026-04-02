@@ -126,4 +126,8 @@ export class ProviderRepository {
       { new: true }
     );
   }
+
+  async findByOwnerId(ownerId: string): Promise<ProviderDocument | null> {
+    return ProviderModel.findOne({ ownerId }).exec();
+  }
 }
