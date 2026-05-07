@@ -20,7 +20,7 @@ export class AuthController {
 
     res.status(200)
     .cookie('accessToken',result.accessToken ,this.getCookieOptions(result.accessToken) )
-    .json(ApiResponse.success(result, 'Login successful'));
+    .json(ApiResponse.success( 'Login successful'));
   });
 
 

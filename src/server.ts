@@ -28,13 +28,13 @@ async function bootstrap() {
 const isPrimary = typeof cluster.isPrimary !== 'undefined' ? cluster.isPrimary : (cluster as any).isMaster;
 
 if (isPrimary) {
-  console.log(`=============================================`);
-  console.log(`🌟 Primary Master ${process.pid} is running`);
-  console.log(`📘 Swagger docs available at http://localhost:${PORT}/docs`);
-  console.log(`=============================================`);
-
   const numCPUs = os.cpus().length;
 
+  console.log(`\n=========================================`);
+  console.log(`🌟 Primary Master  : ${process.pid}`);
+  console.log(`📘 Swagger Docs    : http://localhost:${PORT}/docs`);
+  console.log(`💻 CPU Cores       : ${numCPUs}`);
+  console.log(`=========================================\n`);
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
